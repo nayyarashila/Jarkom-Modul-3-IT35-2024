@@ -834,6 +834,10 @@ Ada 4 algoritma, round robin, hash, least connection, ip hash. Uncomment salah s
 
 ### Grafik dan Analisis
 
+![image](https://github.com/user-attachments/assets/2614d84c-af35-4246-9d96-1610f849b7bf)
+
+Analisis: 
+> Generic Hash memiliki performa terbaik dengan RPS tertinggi, diikuti oleh Weight Round-Robin. Round Robin berada di tengah, sementara IP Hash memiliki RPS terendah. Generic Hash paling optimal untuk beban tinggi, sedangkan IP Hash cocok untuk kestabilan sesi.
 
   
 # Soal 9
@@ -872,8 +876,13 @@ ln -sf /etc/nginx/sites-available/least_connection /etc/nginx/sites-enabled/
 service nginx restart
 ```
 
-* Jalankan di client
-`ab -n 1000 -c 75 http://192.234.3.3/`
+* Grafik dan Analisa
+  
+![image](https://github.com/user-attachments/assets/b21c436d-e4a8-48aa-a6ab-2f8c186ca652)
+
+Analisa:
+>Dari hasil uji coba, Generic Hash memiliki performa terbaik dengan RPS tertinggi (696.55), diikuti oleh Weight Round-Robin (625.65), Round Robin (486.31), dan IP Hash yang terendah (435.29). Generic Hash paling optimal untuk penyeimbangan beban, sementara IP Hash lebih cocok untuk kebutuhan penanganan sesi yang stabil.
+
 
 # Soal 10
 Selanjutnya coba tambahkan keamanan dengan konfigurasi autentikasi di Colossal dengan dengan kombinasi username: “arminannie” dan password: “jrkmyyy”, dengan yyy merupakan kode kelompok. Terakhir simpan file “htpasswd” nya di /etc/nginx/supersecret/ (10)

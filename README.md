@@ -842,6 +842,7 @@ service nginx restart
 `ab -n 1000 -c 75 http://192.234.3.3/`
 
 # Soal 10
+Selanjutnya coba tambahkan keamanan dengan konfigurasi autentikasi di Colossal dengan dengan kombinasi username: “arminannie” dan password: “jrkmyyy”, dengan yyy merupakan kode kelompok. Terakhir simpan file “htpasswd” nya di /etc/nginx/supersecret/ (10)
 
 * Konfigurasi pada Colossal (Load Balancer PHP)
 ```
@@ -884,6 +885,8 @@ service nginx restart
 ```
 
 # Soal 11
+Lalu buat untuk setiap request yang mengandung /titan akan di proxy passing menuju halaman https://attackontitan.fandom.com/wiki/Attack_on_Titan_Wiki (11) 
+hint: (proxy_pass)
 
 * Konfigurasi pada Colossal (Load Balancer PHP)
 ```
@@ -934,6 +937,8 @@ service nginx restart
 ```
 
 # Soal 12
+Selanjutnya Colossal ini hanya boleh diakses oleh client dengan IP [Prefix IP].1.77, [Prefix IP].1.88, [Prefix IP].2.144, dan [Prefix IP].2.156. (12) 
+hint: (fixed in dulu clientnya)
 
 * Konfigurasi pada Colossal (Load Balancer PHP)
 ```
@@ -1000,6 +1005,7 @@ service isc-dhcp-server restart
 ```
 
 # Soal  13
+Karena mengetahui bahwa ada keturunan marley yang mewarisi kekuatan titan, Zeke pun berinisiatif untuk menyimpan data data penting di Warhammer, dan semua data tersebut harus dapat diakses oleh anak buah kesayangannya, Annie, Reiner, dan Berthold.  (13)
 
 * Konfigurasi pada Warhammer (Database)
 ```

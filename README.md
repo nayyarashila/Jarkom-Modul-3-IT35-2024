@@ -1,5 +1,11 @@
 # Jarkom-Modul-3-IT35-2024
 
+| Nama          | NRP          |
+| ------------- | ------------ |
+| RM Novian Malcolm Bayuputra | 5027231035 |
+| Nayyara Ashila | 5027231083 |
+
+
 ## Topologi
 
 ![Screenshot 2024-10-22 212315](https://github.com/user-attachments/assets/32a46951-f329-4af1-8066-edfe7f0c8a68)

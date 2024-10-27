@@ -802,6 +802,40 @@ service nginx restart
 
 Ada 4 algoritma, round robin, hash, least connection, ip hash. Uncomment salah satu atau tidak sama sekali
 
+- Round Robin
+  `ab -n 1000 -c 75 http://192.234.3.3:81/`
+  
+![Screenshot 2024-10-27 032826](https://github.com/user-attachments/assets/e4bd8e22-3435-4b42-a633-b1f6814f1acb)
+![Screenshot 2024-10-27 032837](https://github.com/user-attachments/assets/5e549817-1db4-4247-a3b8-66f14e18f19a)
+
+- Weight Round-Robin
+  `ab -n 1000 -c 75 http://192.234.3.3:82/`
+  
+![Screenshot 2024-10-27 032929](https://github.com/user-attachments/assets/a7eb14f8-7609-4158-b9b7-b2174adf4436)
+![Screenshot 2024-10-27 033005](https://github.com/user-attachments/assets/a31f6fcc-34af-4cb3-aa14-6e12b1ffc44e)
+
+- Generic Hash
+  `ab -n 1000 -c 75 http://192.234.3.3:83/`
+
+![Screenshot 2024-10-27 033059](https://github.com/user-attachments/assets/2212b0d9-fef5-4a2b-a03c-32192f72330a)
+![Screenshot 2024-10-27 033109](https://github.com/user-attachments/assets/5c491869-4e29-4f6c-be20-b1e1831c497c)
+
+- IP Hash
+  `ab -n 1000 -c 75 http://192.234.3.3:84/`
+  
+![Screenshot 2024-10-27 033147](https://github.com/user-attachments/assets/b07c55bd-2f32-4c3f-928e-4035b4e3c5bf)
+![Screenshot 2024-10-27 033200](https://github.com/user-attachments/assets/10d3d1fb-5b91-46ae-b0e7-b81137f6ffcc)
+
+- Least Connection
+  `ab -n 1000 -c 75 http://192.234.3.3:85/`
+
+![Screenshot 2024-10-27 033244](https://github.com/user-attachments/assets/f908de9c-f2e0-47ed-9743-adfbbef180a1)
+![Screenshot 2024-10-27 033235](https://github.com/user-attachments/assets/ada4383c-fbed-4f5d-8b61-bff758757f24)
+
+### Grafik dan Analisis
+
+
+  
 # Soal 9
 Dengan menggunakan algoritma Least-Connection, lakukan testing dengan menggunakan 3 worker, 2 worker, dan 1 worker sebanyak 1000 request dengan 10 request/second, kemudian tambahkan grafiknya pada “laporan kerja Armin”. (9)
 

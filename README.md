@@ -98,7 +98,7 @@ auto eth0
 iface eth0 inet static
 	address 192.234.1.3
 	netmask 255.255.255.0
-	gateway 192.234.1.0
+	gateway 192.234.1.1
 ```
 
 ## Reiner (Laravel Worker)
@@ -107,7 +107,7 @@ auto eth0
 iface eth0 inet static
 	address 192.234.1.4
 	netmask 255.255.255.0
-	gateway 192.234.1.0
+	gateway 192.234.1.1
 ```
 
 ## Armin (PHP Worker)
@@ -116,7 +116,8 @@ auto eth0
 iface eth0 inet static
 	address 192.234.2.2
 	netmask 255.255.255.0
-	gateway 192.234.2.0
+	gateway 192.234.2.1
+up echo 'nameserver 192.234.4.3' > /etc/resolv.conf  
 ```
 
 ## Eren (PHP Worker)
@@ -125,7 +126,9 @@ auto eth0
 iface eth0 inet static
 	address 192.234.2.3
 	netmask 255.255.255.0
-	gateway 192.234.2.0
+	gateway 192.234.2.1
+up echo 'nameserver 192.234.4.3' > /etc/resolv.conf   
+
 ```
 
 ## Mikasa (PHP Worker)
@@ -134,7 +137,8 @@ auto eth0
 iface eth0 inet static
 	address 192.234.2.4
 	netmask 255.255.255.0
-	gateway 192.234.2.0
+	gateway 192.234.2.1
+up echo 'nameserver 192.234.4.3' > /etc/resolv.conf 
 ```
 
 ## Erwin (Client)

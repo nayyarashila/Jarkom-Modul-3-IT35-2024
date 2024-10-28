@@ -60,18 +60,18 @@ iface eth0 inet static
 ```
 auto eth0
 iface eth0 inet static
-	address 192.234.3.4
+	address 192.234.3.2
 	netmask 255.255.255.0
-	gateway 192.234.3.0
+	gateway 192.234.3.1
 ```
 
 ## Beast (Load Balancer Laravel)
 ```
 auto eth0
 iface eth0 inet static
-	address 192.234.3.2
+	address 192.234.3.3
 	netmask 255.255.255.0
-	gateway 192.234.3.0
+	gateway 192.234.3.1
 ```
 
 ## Colossal (Load Balancer PHP)

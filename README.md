@@ -78,9 +78,9 @@ iface eth0 inet static
 ```
 auto eth0
 iface eth0 inet static
-	address 192.234.3.3
+	address 192.234.3.4
 	netmask 255.255.255.0
-	gateway 192.234.3.0
+	gateway 192.234.3.1
 ```
 
 ## Annie (Laravel Worker)
@@ -89,7 +89,7 @@ auto eth0
 iface eth0 inet static
 	address 192.234.1.2
 	netmask 255.255.255.0
-	gateway 192.234.1.0
+	gateway 192.234.1.1
 ```
 
 ## Bertholdt (Laravel Worker)

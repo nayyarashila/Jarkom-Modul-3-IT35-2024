@@ -12,51 +12,48 @@
 
 # Setup Config
 
-## paradis (Router/DHCP Relay)
+## Paradis (Router/DHCP Relay)
 ```
-# DHCP config for eth0
 auto eth0
 iface eth0 inet dhcp
 
 auto eth1
 iface eth1 inet static
-	address 192.234.1.0
+	address 192.234.1.1
 	netmask 255.255.255.0
 
 auto eth2
 iface eth2 inet static
-	address 192.234.2.0
+	address 192.234.2.1
 	netmask 255.255.255.0
 
 auto eth3
 iface eth3 inet static
-	address 192.234.3.0
+	address 192.234.3.1
 	netmask 255.255.255.0
 
 auto eth4
 iface eth4 inet static
-	address 192.234.4.0
+	address 192.234.4.1
 	netmask 255.255.255.0
-
-iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 192.234.0.0/16
 ```
 
 ## Fritz (DNS Server)
 ```
 auto eth0
 iface eth0 inet static
-	address 192.234.4.2
+	address 192.234.4.3
 	netmask 255.255.255.0
-	gateway 192.234.4.0
+	gateway 192.234.4.1
 ```
 
 ## Tybur (DHCP Server)
 ```
 auto eth0
 iface eth0 inet static
-	address 192.234.4.3
+	address 192.234.4.2
 	netmask 255.255.255.0
-	gateway 192.234.4.0
+	gateway 192.234.4.1
 ```
 
 ## Warhammer (Database Server)

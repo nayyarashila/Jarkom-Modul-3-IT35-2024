@@ -588,141 +588,36 @@ b. Report hasil testing pada Apache Benchmark
 c. Grafik request per second untuk masing masing algoritma. 
 d. Analisis (8)
 
-* Script Colossal8.sh
 ```
-#!/bin/bash
+cp /etc/nginx/sites-available/default /etc/nginx/sites-available/lb_php
 
-# Konfigurasi Round Robin
-cp /etc/nginx/sites-available/default /etc/nginx/sites-available/round_robin
+echo ' upstream worker {
+        #    hash $request_uri consistent;
+        #    least_conn;
+        #    ip_hash;
+    server 192.234.2.2;
+    server 192.234.2.3;
+    server 192.234.2.4;
+}
 
-echo '
-    upstream round-robin {
-        server 192.234.2.2;
-        server 192.234.2.3;
-        server 192.234.2.4;
+server {
+    listen 80;
+    server_name eldia.it35.com www.eldia.it35.com;
+
+    root /var/www/html;
+
+    index index.html index.htm index.nginx-debian.html index.php;
+
+    server_name _;
+
+    location / {
+        proxy_pass http://worker;
     }
+} ' > /etc/nginx/sites-available/lb_php
 
-    server {
-        listen 81;
-        root /var/www/html;
+ln -s /etc/nginx/sites-available/lb_php /etc/nginx/sites-enabled/
+rm /etc/nginx/sites-enabled/default
 
-        index index.html index.htm index.nginx-debian.html;
-
-        server_name _;
-
-        location / {
-            proxy_pass http://round-robin;
-        }
-    }
-' > /etc/nginx/sites-available/round_robin
-
-# Konfigurasi Weighted Round Robin
-cp /etc/nginx/sites-available/default /etc/nginx/sites-available/weight_round_robin
-
-echo '
-    upstream weight_round-robin {
-        server 192.234.2.2 weight=3;
-        server 192.234.2.3 weight=2;
-        server 192.234.2.4 weight=1;
-    }
-
-    server {
-        listen 82;
-        root /var/www/html;
-
-        index index.html index.htm index.nginx-debian.html;
-
-        server_name _;
-
-        location / {
-            proxy_pass http://weight_round-robin;
-        }
-    }
-' > /etc/nginx/sites-available/weight_round_robin
-
-# Konfigurasi Generic Hash
-cp /etc/nginx/sites-available/default /etc/nginx/sites-available/generic_hash
-
-echo '
-    upstream generic_hash {
-        hash $request_uri consistent;
-        server 192.234.2.2 weight=3;
-        server 192.234.2.3 weight=2;
-        server 192.234.2.4 weight=1;
-    }
-
-    server {
-        listen 83;
-        root /var/www/html;
-
-        index index.html index.htm index.nginx-debian.html;
-
-        server_name _;
-
-        location / {
-            proxy_pass http://generic_hash;
-        }
-    }
-' > /etc/nginx/sites-available/generic_hash
-
-# Konfigurasi IP Hash
-cp /etc/nginx/sites-available/default /etc/nginx/sites-available/ip_hash
-
-echo '
-    upstream ip_hash {
-        ip_hash;
-        server 192.234.2.2;
-        server 192.234.2.3;
-        server 192.234.2.4;
-    }
-
-    server {
-        listen 84;
-        root /var/www/html;
-
-        index index.html index.htm index.nginx-debian.html;
-
-        server_name _;
-
-        location / {
-            proxy_pass http://ip_hash;
-        }
-    }
-' > /etc/nginx/sites-available/ip_hash
-
-# Konfigurasi Least Connections
-cp /etc/nginx/sites-available/default /etc/nginx/sites-available/least_connection
-
-echo '
-    upstream least_connection {
-        least_conn;
-        server 192.234.2.2;
-        server 192.234.2.3;
-        server 192.234.2.4;
-    }
-
-    server {
-        listen 85;
-        root /var/www/html;
-
-        index index.html index.htm index.nginx-debian.html;
-
-        server_name _;
-
-        location / {
-            proxy_pass http://least_connection;
-        }
-    }
-' > /etc/nginx/sites-available/least_connection
-
-# Aktifkan semua konfigurasi load balancer
-ln -sf /etc/nginx/sites-available/round_robin /etc/nginx/sites-enabled/
-ln -sf /etc/nginx/sites-available/weight_round_robin /etc/nginx/sites-enabled/
-ln -sf /etc/nginx/sites-available/generic_hash /etc/nginx/sites-enabled/
-ln -sf /etc/nginx/sites-available/ip_hash /etc/nginx/sites-enabled/
-ln -sf /etc/nginx/sites-available/least_connection /etc/nginx/sites-enabled/
-
-# Restart Nginx
 service nginx restart
 ```
 
@@ -735,34 +630,20 @@ service nginx restart
 Ada 4 algoritma, round robin, hash, least connection, ip hash. Uncomment salah satu atau tidak sama sekali
 
 - Round Robin
-  `ab -n 1000 -c 75 http://192.234.3.3:81/`
   
-![Screenshot 2024-10-27 032826](https://github.com/user-attachments/assets/e4bd8e22-3435-4b42-a633-b1f6814f1acb)
-![Screenshot 2024-10-27 032837](https://github.com/user-attachments/assets/5e549817-1db4-4247-a3b8-66f14e18f19a)
+![Screenshot 2024-10-27 110814](https://github.com/user-attachments/assets/48938921-166e-4bae-9663-a61ec946b988)
 
-- Weight Round-Robin
-  `ab -n 1000 -c 75 http://192.234.3.3:82/`
-  
-![Screenshot 2024-10-27 032929](https://github.com/user-attachments/assets/a7eb14f8-7609-4158-b9b7-b2174adf4436)
-![Screenshot 2024-10-27 033005](https://github.com/user-attachments/assets/a31f6fcc-34af-4cb3-aa14-6e12b1ffc44e)
+- Hash
 
-- Generic Hash
-  `ab -n 1000 -c 75 http://192.234.3.3:83/`
-
-![Screenshot 2024-10-27 033059](https://github.com/user-attachments/assets/2212b0d9-fef5-4a2b-a03c-32192f72330a)
-![Screenshot 2024-10-27 033109](https://github.com/user-attachments/assets/5c491869-4e29-4f6c-be20-b1e1831c497c)
-
-- IP Hash
-  `ab -n 1000 -c 75 http://192.234.3.3:84/`
-  
-![Screenshot 2024-10-27 033147](https://github.com/user-attachments/assets/b07c55bd-2f32-4c3f-928e-4035b4e3c5bf)
-![Screenshot 2024-10-27 033200](https://github.com/user-attachments/assets/10d3d1fb-5b91-46ae-b0e7-b81137f6ffcc)
+![Screenshot 2024-10-27 110855](https://github.com/user-attachments/assets/fee7c106-44f4-47c7-94f5-ae8082533b54)
 
 - Least Connection
-  `ab -n 1000 -c 75 http://192.234.3.3:85/`
 
-![Screenshot 2024-10-27 033244](https://github.com/user-attachments/assets/f908de9c-f2e0-47ed-9743-adfbbef180a1)
-![Screenshot 2024-10-27 033235](https://github.com/user-attachments/assets/ada4383c-fbed-4f5d-8b61-bff758757f24)
+![Screenshot 2024-10-27 110942](https://github.com/user-attachments/assets/88dc13d2-c4f9-4e5f-aabc-a67009435f01)
+
+- IP Hash
+
+![Screenshot 2024-10-27 111027](https://github.com/user-attachments/assets/511cb9bc-acc8-484b-8b47-8bd8a6d8ff27)
 
 ### Grafik dan Analisis
 
@@ -775,46 +656,50 @@ Analisis:
 # Soal 9
 Dengan menggunakan algoritma Least-Connection, lakukan testing dengan menggunakan 3 worker, 2 worker, dan 1 worker sebanyak 1000 request dengan 10 request/second, kemudian tambahkan grafiknya pada “laporan kerja Armin”. (9)
 
-* Script Colossal9.sh
 ```
-# Konfigurasi Least Connections
-cp /etc/nginx/sites-available/default /etc/nginx/sites-available/least_connection
+cp /etc/nginx/sites-available/default /etc/nginx/sites-available/lb_php
 
-echo '
-    upstream least_connection {
-        least_conn;
-        server 192.234.2.2;
-        server 192.234.2.3;
-        server 192.234.2.4;
+echo ' upstream worker {
+        #    hash $request_uri consistent;
+            least_conn;
+        #    ip_hash;
+    server 192.234.2.2;
+    server 192.234.2.3;
+    server 192.234.2.4;
+}
+
+server {
+    listen 80;
+    server_name eldia.it35.com www.eldia.it35.com;
+
+    root /var/www/html;
+
+    index index.html index.htm index.nginx-debian.html index.php;
+
+    server_name _;
+
+    location / {
+        proxy_pass http://worker;
     }
+} ' > /etc/nginx/sites-available/lb_php
 
-    server {
-        listen 85;
-        root /var/www/html;
+ln -s /etc/nginx/sites-available/lb_php /etc/nginx/sites-enabled/
+rm /etc/nginx/sites-enabled/default
 
-        index index.html index.htm index.nginx-debian.html;
-
-        server_name _;
-
-        location / {
-            proxy_pass http://least_connection;
-        }
-    }
-' > /etc/nginx/sites-available/least_connection
-
-ln -sf /etc/nginx/sites-available/least_connection /etc/nginx/sites-enabled/
-
-# Restart Nginx
 service nginx restart
 ```
 
-* Grafik dan Analisa
-  
-![image](https://github.com/user-attachments/assets/b21c436d-e4a8-48aa-a6ab-2f8c186ca652)
+- 3 Worker
 
-Analisa:
->Dari hasil uji coba, Generic Hash memiliki performa terbaik dengan RPS tertinggi (696.55), diikuti oleh Weight Round-Robin (625.65), Round Robin (486.31), dan IP Hash yang terendah (435.29). Generic Hash paling optimal untuk penyeimbangan beban, sementara IP Hash lebih cocok untuk kebutuhan penanganan sesi yang stabil.
+![Screenshot 2024-10-27 111337](https://github.com/user-attachments/assets/73ffabf7-7c7e-4309-8e77-fddcd3ebe052)
 
+- 2 Worker
+
+![Screenshot 2024-10-27 111456](https://github.com/user-attachments/assets/ec233dcb-c6c0-4ec2-a3be-0699ca7de729)
+
+- 1 Worker
+
+![Screenshot 2024-10-27 111537](https://github.com/user-attachments/assets/7b5ce8cd-a832-477e-b5da-bf4ac67ce8eb)
 
 # Soal 10
 Selanjutnya coba tambahkan keamanan dengan konfigurasi autentikasi di Colossal dengan dengan kombinasi username: “arminannie” dan password: “jrkmyyy”, dengan yyy merupakan kode kelompok. Terakhir simpan file “htpasswd” nya di /etc/nginx/supersecret/ (10)
@@ -858,6 +743,10 @@ rm /etc/nginx/sites-enabled/default
 
 service nginx restart
 ```
+
+* Contoh jika username/password salah
+
+![Screenshot 2024-10-27 113431](https://github.com/user-attachments/assets/021d45f4-f192-4a34-9b9c-0e76970ed9a4)
 
 # Soal 11
 Lalu buat untuk setiap request yang mengandung /titan akan di proxy passing menuju halaman https://attackontitan.fandom.com/wiki/Attack_on_Titan_Wiki (11) 
@@ -910,6 +799,9 @@ rm /etc/nginx/sites-enabled/default
 
 service nginx restart
 ```
+
+![Screenshot 2024-10-27 114029](https://github.com/user-attachments/assets/d1627138-1c39-4f54-9cad-a9046664af46)
+
 
 # Soal 12
 Selanjutnya Colossal ini hanya boleh diakses oleh client dengan IP [Prefix IP].1.77, [Prefix IP].1.88, [Prefix IP].2.144, dan [Prefix IP].2.156. (12) 
@@ -979,6 +871,14 @@ service isc-dhcp-server restart
 
 ```
 
+* Contoh jika ip tidak sesuai yang diallow
+
+![Screenshot 2024-10-27 115501](https://github.com/user-attachments/assets/3215b6b2-5ac2-41e8-b4aa-5a7c6571aaa0)
+
+* Contoh jika ip sesuai yang diallow
+
+![Screenshot 2024-10-27 115702](https://github.com/user-attachments/assets/c988e22c-f0da-42b1-bba7-29ca3c580ed9)
+
 # Soal  13
 Karena mengetahui bahwa ada keturunan marley yang mewarisi kekuatan titan, Zeke pun berinisiatif untuk menyimpan data data penting di Warhammer, dan semua data tersebut harus dapat diakses oleh anak buah kesayangannya, Annie, Reiner, dan Berthold.  (13)
 
@@ -1019,6 +919,12 @@ FLUSH PRIVILEGES;
 
 **Cek di setiap worker**
 `mysql --host=192.234.3.2 --port=3306 --user=it35 --password=it35 dbit35 -e "SHOW DATABASES;"`
+
+![Screenshot 2024-10-27 121822](https://github.com/user-attachments/assets/5681ccfc-3aa3-4019-bacf-4bc80a0f432e)
+
+![Screenshot 2024-10-27 121937](https://github.com/user-attachments/assets/121c2594-0973-4b9e-818c-bcb7dc119d31)
+
+![Screenshot 2024-10-27 122118](https://github.com/user-attachments/assets/11ab7510-f65d-4df2-8146-5ae3bb5da03d)
 
 
 

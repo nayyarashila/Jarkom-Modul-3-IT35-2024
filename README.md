@@ -647,10 +647,7 @@ Ada 4 algoritma, round robin, hash, least connection, ip hash. Uncomment salah s
 
 ### Grafik dan Analisis
 
-![image](https://github.com/user-attachments/assets/2614d84c-af35-4246-9d96-1610f849b7bf)
-
-Analisis: 
-> Generic Hash memiliki performa terbaik dengan RPS tertinggi, diikuti oleh Weight Round-Robin. Round Robin berada di tengah, sementara IP Hash memiliki RPS terendah. Generic Hash paling optimal untuk beban tinggi, sedangkan IP Hash cocok untuk kestabilan sesi.
+![Screenshot 2024-10-29 193558](https://github.com/user-attachments/assets/67c64618-7a38-42b9-ba61-1bdb1dbda938)
 
   
 # Soal 9

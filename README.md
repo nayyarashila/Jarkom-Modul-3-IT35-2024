@@ -224,8 +224,6 @@ apt-get install jq -y
 # Soal 0
 Pulau Paradis telah menjadi tempat yang damai selama 1000 tahun, namun kedamaian tersebut tidak bertahan selamanya. Perang antara kaum Marley dan Eldia telah mencapai puncak. Kaum Marley yang dipimpin oleh Zeke, me-register domain name marley.yyy.com untuk worker Laravel mengarah pada Annie. Namun ternyata tidak hanya kaum Marley saja yang berinisiasi, kaum Eldia ternyata sudah mendaftarkan domain name eldia.yyy.com untuk worker PHP (0) mengarah pada Armin.
 
-* Fritz1.sh (DNS Server)
-
 ```
 echo 'zone "marley.it35.com" {
     type master;
@@ -287,15 +285,15 @@ echo 'options {
 service bind9 restart
 ```
 
-* tes ping `marley.it35.com`
-
-![Screenshot 2024-10-27 013651](https://github.com/user-attachments/assets/75d31176-bfb5-46eb-8609-afe8515869eb)
+* Test Ping `eldia.it35.com`
+  
+![Screenshot 2024-10-29 075115](https://github.com/user-attachments/assets/420554aa-98e8-4b82-b2ec-a47d71a009af)
 
 
 # Soal 1-5
 
 >Nomor 2
-* konfigurasi pada Tybur (DHCP Server)
+* Konfigurasi pada Tybur (DHCP Server)
 ```
 echo '
 subnet 192.234.1.0 netmask 255.255.255.0 {
@@ -309,7 +307,6 @@ service isc-dhcp-server restart
 
 >Nomor 3
 * Konfigurasi pada Tybur (DHCP Server)
-
 ```
 echo '
 subnet 192.234.1.0 netmask 255.255.255.0 {
@@ -325,6 +322,7 @@ subnet 192.234.2.0 netmask 255.255.255.0 {
 
 service isc-dhcp-server restart
 ```
+
 >Nomor 4
 * Konfigurasi pada Paradis (DHCP Relay)
   
@@ -380,7 +378,6 @@ service isc-dhcp-server restart
 
 >Nomor 5
 * Konfigurasi pada Tybur (DHCP Server)
-  
 ```
 echo '
 INTERFACESv4="eth0"
@@ -420,12 +417,12 @@ subnet 192.234.4.0 netmask 255.255.255.0 {
 service isc-dhcp-server restart
 ```
 
-* tes ping `marley.it35.com`
+* Test Ping `eldia.it35.com`
 
 ![Screenshot 2024-10-27 013651](https://github.com/user-attachments/assets/75d31176-bfb5-46eb-8609-afe8515869eb)
 
 # Soal 6
-Armin berinisiasi untuk memerintahkan setiap worker PHP untuk melakukan konfigurasi virtual host untuk website berikut https://intip.in/BangsaEldia dengan menggunakan php 7.3 (6)
+Armin berinisiasi untuk memerintahkan setiap worker PHP untuk melakukan konfigurasi virtual host untuk website berikut https://intip.in/BangsaEldia dengan menggunakan php 7.3 
 
 * Konfigurasi pada PHP Worker
 ```
@@ -468,81 +465,15 @@ server {
 service nginx restart
 ```
 
-* Script untuk Armin, Eren, Mikasa
-```
-#!/bin/bash
-
-# Update package list and install necessary packages
-apt-get update
-apt-get install lynx nginx wget unzip php7.3 php-fpm -y
-
-# Start PHP-FPM and Nginx services
-service php7.3-fpm start
-service nginx start
-
-# Create download directory
-mkdir -p /var/www/html/download/
-
-# Download the ZIP file from Google Drive
-wget --no-check-certificate 'https://drive.google.com/uc?export=download&id=1yliJkxu-3XmgJ6Xb37pGc2Jht5NTO9oj' -O /var/www/html/download/bangsa-eldia.zip
-
-# Unzip the downloaded file
-unzip /var/www/html/download/bangsa-eldia.zip -d /var/www/html/download
-
-# Move extracted files to the web root
-mv /var/www/html/download/bangsa-eldia/modul-3/* /var/www/html/
-
-# Clean up by removing the download directory
-rm -rf /var/www/html/download/
-
-# Configure Nginx
-cat <<EOL > /etc/nginx/sites-available/it35.conf
-server {
-    listen 80;
-
-    root /var/www/html;
-
-    index index.php index.html index.htm;
-
-    server_name _;
-
-    location / {
-        try_files \$uri \$uri/ /index.php?\$query_string;
-    }
-
-    location ~ \.php$ {
-        include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php7.3-fpm.sock;
-    }
-
-    error_log /var/log/nginx/it35_error.log;
-    access_log /var/log/nginx/it35_access.log;
-}
-EOL
-
-# Enable the site configuration
-ln -s /etc/nginx/sites-available/it35.conf /etc/nginx/sites-enabled/
-
-# Remove the default Nginx site
-rm /etc/nginx/sites-enabled/default
-
-# Restart Nginx and PHP-FPM services
-service nginx restart
-service php7.3-fpm restart
-```
-
 * Test di Armin
-`lynx 192.234.2.2`
 
 ![Screenshot 2024-10-27 024526](https://github.com/user-attachments/assets/d770bd2c-258c-41f2-a8a4-e7d6dbcbfbfe)
 
 * Test di Eren
-`lynx 192.234.2.3`
 
 ![Screenshot 2024-10-27 024054](https://github.com/user-attachments/assets/228678ef-47e9-46a1-9e4b-5e8baf0ca653)
 
 * Test di Mikasa
-`lynx 192.234.2.4`
 
 ![Screenshot 2024-10-27 023913](https://github.com/user-attachments/assets/15a2472b-d167-422b-b244-e1265d0b09ca)
 
@@ -645,10 +576,10 @@ service bind9 restart
 
 * Test di client
 
-`ab -n 6000 -c 200 http://192.234.3.3/`
+`ab -n 6000 -c 200 http://eldia.it35.com/`
 
-![Screenshot 2024-10-27 031809](https://github.com/user-attachments/assets/48b9855a-3209-41a7-8319-2c43223aa9ab)
-![Screenshot 2024-10-27 031710](https://github.com/user-attachments/assets/e379758d-4f3c-4d87-89d2-24d930c6d868)
+![Screenshot 2024-10-27 110724](https://github.com/user-attachments/assets/6c8ff12d-8e32-43fc-9288-e96762337c14)
+
 
 # Soal 8
 Karena Erwin meminta “laporan kerja Armin”, maka dari itu buatlah analisis hasil testing dengan 1000 request dan 75 request/second untuk masing-masing algoritma Load Balancer dengan ketentuan sebagai berikut:
